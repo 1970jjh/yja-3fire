@@ -5,7 +5,8 @@ import AdminDashboard from './components/AdminDashboard';
 import AdminLogin from './components/AdminLogin';
 import AdminSessionManager from './components/AdminSessionManager';
 import StudentLogin from './components/StudentLogin';
-import { Smartphone, Monitor, User, Flame, Lock, LogOut, ChevronRight, ShieldAlert } from 'lucide-react';
+import { Smartphone, Monitor, User, Flame, Lock, LogOut, ChevronRight, ShieldAlert, Loader2 } from 'lucide-react';
+import { subscribeToSessions, createSession, deleteSession, updateSession } from './firebase';
 
 const INITIAL_STATE: SimulationState = {
   currentStep: 'INTRO',
@@ -21,32 +22,34 @@ const INITIAL_STATE: SimulationState = {
   finalReport: null,
 };
 
-// Mock Session for initial load
-const DEFAULT_SESSION: SessionConfig = {
-    id: 'default',
-    groupName: '데모 교육 세션',
-    totalTeams: 6,
-    createdAt: Date.now(),
-    isReportEnabled: false,
-};
-
 type AppMode = 'SELECT_ROLE' | 'ADMIN_LOGIN' | 'ADMIN_SESSION_MANAGER' | 'ADMIN_DASHBOARD' | 'STUDENT_LOGIN' | 'STUDENT_GAME';
 
 export default function App() {
   const [appMode, setAppMode] = useState<AppMode>('SELECT_ROLE');
-  const [currentSession, setCurrentSession] = useState<SessionConfig>(DEFAULT_SESSION);
+  const [currentSession, setCurrentSession] = useState<SessionConfig | null>(null);
   const [gameState, setGameState] = useState<SimulationState>(INITIAL_STATE);
-  
-  const [isAdmin, setIsAdmin] = useState(false);
-  
-  const [sessions, setSessions] = useState<SessionConfig[]>(() => {
-      const saved = localStorage.getItem('firesim_sessions');
-      return saved ? JSON.parse(saved) : [DEFAULT_SESSION];
-  });
 
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [sessions, setSessions] = useState<SessionConfig[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Firebase 실시간 구독
   useEffect(() => {
-    localStorage.setItem('firesim_sessions', JSON.stringify(sessions));
-  }, [sessions]);
+    const unsubscribe = subscribeToSessions((firebaseSessions) => {
+      setSessions(firebaseSessions);
+      setIsLoading(false);
+
+      // 현재 세션이 선택되어 있으면 업데이트
+      if (currentSession) {
+        const updated = firebaseSessions.find(s => s.id === currentSession.id);
+        if (updated) {
+          setCurrentSession(updated);
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [currentSession?.id]);
 
   // --- Handlers ---
 
@@ -60,24 +63,32 @@ export default function App() {
     setAppMode('ADMIN_DASHBOARD');
   };
 
-  const handleCreateSession = (newSession: SessionConfig) => {
-    setSessions(prev => [...prev, newSession]);
+  const handleCreateSession = async (newSession: SessionConfig) => {
+    try {
+      await createSession(newSession);
+    } catch (error) {
+      console.error('세션 생성 실패:', error);
+      alert('세션 생성에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
-  const handleDeleteSession = (id: string) => {
-    setSessions(prev => {
-        const updated = prev.filter(s => s.id !== id);
-        return updated;
-    });
+  const handleDeleteSession = async (id: string) => {
+    try {
+      await deleteSession(id);
+    } catch (error) {
+      console.error('세션 삭제 실패:', error);
+      alert('세션 삭제에 실패했습니다.');
+    }
   };
 
-  const handleToggleReport = (enabled: boolean) => {
-    // Update local current session state
-    const updatedSession = { ...currentSession, isReportEnabled: enabled };
-    setCurrentSession(updatedSession);
-    
-    // Update in storage list as well
-    setSessions(prev => prev.map(s => s.id === currentSession.id ? updatedSession : s));
+  const handleToggleReport = async (enabled: boolean) => {
+    if (!currentSession) return;
+    try {
+      await updateSession(currentSession.id, { isReportEnabled: enabled });
+    } catch (error) {
+      console.error('보고서 설정 변경 실패:', error);
+      alert('설정 변경에 실패했습니다.');
+    }
   };
 
   const handleStudentJoin = (user: UserProfile) => {
@@ -103,6 +114,19 @@ export default function App() {
   };
 
   // --- Renders ---
+
+  // 로딩 화면
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-blue-500 animate-spin mx-auto mb-4" />
+          <p className="text-white text-lg font-medium">연결 중...</p>
+          <p className="text-slate-400 text-sm">Firebase 서버에 접속하고 있습니다</p>
+        </div>
+      </div>
+    );
+  }
 
   if (appMode === 'SELECT_ROLE') {
     return (
@@ -217,30 +241,41 @@ export default function App() {
       );
   }
   if (appMode === 'ADMIN_DASHBOARD') {
+      if (!currentSession) {
+        setAppMode('ADMIN_SESSION_MANAGER');
+        return null;
+      }
       return (
-        <AdminDashboard 
+        <AdminDashboard
             currentSession={currentSession}
             onToggleReport={handleToggleReport}
-            onLogout={handleFullLogout} 
-            onModeSwitch={handleModeSwitch} 
+            onLogout={handleFullLogout}
+            onModeSwitch={handleModeSwitch}
         />
       );
   }
 
   if (appMode === 'STUDENT_LOGIN') {
       return (
-        <StudentLogin 
-            sessionConfig={currentSession} 
-            onJoin={handleStudentJoin} 
-            onBack={handleModeSwitch} 
+        <StudentLogin
+            sessions={sessions}
+            currentSession={currentSession}
+            onSelectSession={setCurrentSession}
+            onJoin={handleStudentJoin}
+            onBack={handleModeSwitch}
         />
       );
   }
 
+  if (!currentSession) {
+    setAppMode('SELECT_ROLE');
+    return null;
+  }
+
   return (
-    <StudentLayout 
-      gameState={gameState} 
-      setGameState={setGameState} 
+    <StudentLayout
+      gameState={gameState}
+      setGameState={setGameState}
       totalTeams={currentSession.totalTeams}
       onLogout={handleModeSwitch}
       isAdmin={isAdmin}
