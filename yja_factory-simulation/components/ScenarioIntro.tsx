@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { SCENARIO_INFO } from '../constants';
-import { ArrowRight, Volume2, Siren, FileText, Activity, Edit3, Printer, Download, CheckCircle } from 'lucide-react';
+import { ArrowRight, Volume2, Siren, FileText, Activity, Edit3, Printer, Download, CheckCircle, Users, Eye, AlertTriangle, Search, Lightbulb, Shield, Calendar, Flame, Target, TrendingUp } from 'lucide-react';
 
 interface ReportFormData {
   title: string;
@@ -289,83 +289,154 @@ const ScenarioIntro: React.FC<Props> = ({ onNext, onShowInfoCard, teamId }) => {
               </button>
             </div>
           ) : (
-            // Document Preview & Download
+            // Document Preview & Download - Bento Grid Style
             <div className="space-y-6">
-              <div className="bg-slate-900 text-white p-4 rounded-xl shadow-lg flex justify-between items-center">
+              <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-4 rounded-xl shadow-lg flex justify-between items-center">
                 <div>
-                  <h2 className="text-lg font-bold">Report Preview</h2>
+                  <h2 className="text-lg font-bold flex items-center gap-2">
+                    <FileText className="w-5 h-5" />
+                    Report Preview
+                  </h2>
                   <p className="text-xs text-slate-400">내용 확인 후 이미지를 저장하여 제출하세요.</p>
                 </div>
                 <CheckCircle className="w-6 h-6 text-green-400" />
               </div>
 
-              {/* A4 Paper Style Container */}
+              {/* Bento Grid Infographic Container */}
               <div className="overflow-x-auto pb-4">
-                <div ref={reportRef} className="bg-white w-full max-w-[210mm] min-h-[297mm] mx-auto p-8 md:p-12 shadow-2xl border border-slate-100 relative">
+                <div ref={reportRef} className="bg-gradient-to-br from-slate-50 to-slate-100 w-full max-w-[210mm] mx-auto p-6 md:p-8 shadow-2xl rounded-2xl relative">
 
-                  {/* Document Header */}
-                  <div className="border-b-2 border-slate-800 pb-6 mb-8 flex flex-col md:flex-row justify-between md:items-end gap-4">
-                    <div>
-                      <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">{formData.title}</h1>
-                      <p className="text-sm text-slate-500 font-medium">제3공장 화재사고 문제해결 시뮬레이션 결과보고</p>
-                    </div>
-                    <div className="md:text-right">
-                      <div className="text-2xl font-bold text-slate-200">CONFIDENTIAL</div>
-                      <div className="text-sm font-bold text-slate-900 mt-1">Team {teamId}</div>
-                      <div className="text-xs text-slate-500">{formData.members}</div>
+                  {/* Header Card */}
+                  <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-6 rounded-2xl mb-6 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/20 rounded-full blur-3xl"></div>
+                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl"></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Flame className="w-6 h-6 text-orange-400" />
+                        <span className="text-xs font-bold text-orange-400 uppercase tracking-wider">Incident Report</span>
+                      </div>
+                      <h1 className="text-2xl md:text-3xl font-bold mb-2">{formData.title}</h1>
+                      <p className="text-slate-400 text-sm">제3공장 화재사고 문제해결 시뮬레이션 결과보고</p>
+                      <div className="flex items-center gap-4 mt-4 pt-4 border-t border-slate-700">
+                        <div className="flex items-center gap-2">
+                          <Users className="w-4 h-4 text-blue-400" />
+                          <span className="text-sm">{formData.members || '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Target className="w-4 h-4 text-green-400" />
+                          <span className="text-sm">Team {teamId}</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Document Body */}
-                  <div className="space-y-8">
+                  {/* Bento Grid Layout */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-auto">
 
-                    {/* Section 1: Situation & Gap */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div>
-                        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 border-b border-slate-200 pb-1">Current Situation</h3>
-                        <p className="text-sm text-slate-800 leading-relaxed font-medium whitespace-pre-wrap">{formData.situation || '-'}</p>
+                    {/* 1. 현상 파악 - Large Card (2 cols) */}
+                    <div className="col-span-2 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="bg-amber-100 p-2 rounded-xl">
+                          <Eye className="w-5 h-5 text-amber-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-slate-900">현상 파악</h3>
+                          <span className="text-[10px] text-slate-400 uppercase tracking-wider">Situation / Fact</span>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-xs font-bold text-red-400 uppercase tracking-wider mb-2 border-b border-red-100 pb-1">Problem Definition (Gap)</h3>
-                        <p className="text-sm text-slate-800 leading-relaxed font-medium whitespace-pre-wrap">{formData.definition || '-'}</p>
+                      <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{formData.situation || '-'}</p>
+                    </div>
+
+                    {/* 2. 문제 정의 - Large Card (2 cols) */}
+                    <div className="col-span-2 bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-5 shadow-sm border border-red-100 hover:shadow-md transition-shadow">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="bg-red-100 p-2 rounded-xl">
+                          <AlertTriangle className="w-5 h-5 text-red-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-slate-900">문제 정의</h3>
+                          <span className="text-[10px] text-red-400 uppercase tracking-wider">Problem Definition / Gap</span>
+                        </div>
+                      </div>
+                      <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{formData.definition || '-'}</p>
+                    </div>
+
+                    {/* 3. 원인 분석 - Full Width Card (4 cols) */}
+                    <div className="col-span-2 md:col-span-4 bg-gradient-to-r from-slate-800 to-slate-900 text-white rounded-2xl p-5 shadow-lg relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-40 h-40 bg-red-500/10 rounded-full blur-3xl"></div>
+                      <div className="relative z-10">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="bg-red-500/20 p-2 rounded-xl">
+                            <Search className="w-5 h-5 text-red-400" />
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-white">원인 분석</h3>
+                            <span className="text-[10px] text-slate-400 uppercase tracking-wider">Root Cause Analysis / 5 Whys</span>
+                          </div>
+                        </div>
+                        <div className="bg-white/10 rounded-xl p-4 backdrop-blur">
+                          <p className="text-sm text-slate-200 leading-relaxed whitespace-pre-wrap">{formData.cause || '-'}</p>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Section 2: Root Cause */}
-                    <div className="bg-slate-50 p-6 rounded-lg border border-slate-100">
-                      <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                        Root Cause Analysis
-                      </h3>
-                      <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{formData.cause || '-'}</p>
+                    {/* 4. 해결 방안 - Card (2 cols) */}
+                    <div className="col-span-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-5 shadow-sm border border-blue-100 hover:shadow-md transition-shadow">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="bg-blue-100 p-2 rounded-xl">
+                          <Lightbulb className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-slate-900">해결 방안</h3>
+                          <span className="text-[10px] text-blue-400 uppercase tracking-wider">Action Plan / Solution</span>
+                        </div>
+                      </div>
+                      <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{formData.solution || '-'}</p>
                     </div>
 
-                    {/* Section 3: Solutions */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div>
-                        <h3 className="text-xs font-bold text-blue-500 uppercase tracking-wider mb-2 border-b border-blue-100 pb-1">Action Plan (Short-term)</h3>
-                        <p className="text-sm text-slate-800 leading-relaxed font-medium whitespace-pre-wrap">{formData.solution || '-'}</p>
+                    {/* 5. 재발 방지 - Card (2 cols) */}
+                    <div className="col-span-2 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-5 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="bg-green-100 p-2 rounded-xl">
+                          <Shield className="w-5 h-5 text-green-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-slate-900">재발 방지</h3>
+                          <span className="text-[10px] text-green-400 uppercase tracking-wider">Prevention / Long-term</span>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-xs font-bold text-green-500 uppercase tracking-wider mb-2 border-b border-green-100 pb-1">Prevention (Long-term)</h3>
-                        <p className="text-sm text-slate-800 leading-relaxed font-medium whitespace-pre-wrap">{formData.prevention || '-'}</p>
-                      </div>
+                      <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{formData.prevention || '-'}</p>
                     </div>
 
-                    {/* Section 4: Schedule */}
-                    <div className="border-t border-slate-200 pt-6">
-                      <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Implementation Schedule</h3>
-                      <div className="bg-white border border-slate-200 p-4 rounded text-sm font-mono text-slate-600 whitespace-pre-wrap">
-                        {formData.schedule || '-'}
+                    {/* 6. 일정 계획 - Full Width Card (4 cols) */}
+                    <div className="col-span-2 md:col-span-4 bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="bg-purple-100 p-2 rounded-xl">
+                          <Calendar className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-slate-900">일정 계획</h3>
+                          <span className="text-[10px] text-purple-400 uppercase tracking-wider">Implementation Schedule / Timeline</span>
+                        </div>
+                        <div className="ml-auto flex items-center gap-1 text-xs text-slate-400">
+                          <TrendingUp className="w-4 h-4" />
+                          <span>Progress Tracking</span>
+                        </div>
+                      </div>
+                      <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                        <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap font-mono">{formData.schedule || '-'}</p>
                       </div>
                     </div>
 
                   </div>
 
                   {/* Footer */}
-                  <div className="absolute bottom-10 left-8 right-8 md:left-12 md:right-12 border-t border-slate-100 pt-4 flex justify-between text-[10px] text-slate-400 font-mono">
-                    <span>YJA SYSTEMS INCIDENT RESPONSE SIMULATION</span>
-                    <span>PAGE 1 OF 1</span>
+                  <div className="mt-6 pt-4 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-400">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="font-mono">YJA SYSTEMS INCIDENT RESPONSE</span>
+                    </div>
+                    <span className="font-mono">{new Date().toLocaleDateString('ko-KR')}</span>
                   </div>
                 </div>
               </div>
@@ -380,7 +451,7 @@ const ScenarioIntro: React.FC<Props> = ({ onNext, onShowInfoCard, teamId }) => {
                 </button>
                 <button
                   onClick={handleDownload}
-                  className="flex-[2] bg-blue-600 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
+                  className="flex-[2] bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
                 >
                   <Download className="w-5 h-5" />
                   이미지 저장 (Download)
