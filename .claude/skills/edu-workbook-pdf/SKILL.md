@@ -15,7 +15,7 @@ content.html  +  style.css(=template.css 복사본)  +  assets/fonts/*.ttf
         └──────────────── build.py (WeasyPrint) ───────────────→  output.pdf
 ```
 
-1. 작업 폴더에 `template.css`를 **`style.css`** 라는 이름으로 복사하고, `assets/fonts/`(이 스킬의 폰트 3종)도 복사한다.
+1. 작업 폴더에 `template.css`를 **`style.css`** 라는 이름으로 복사하고, `assets/fonts/`(이 스킬의 폰트 3종)도 복사한다. 복사한 CSS의 `@bottom-center` 플레이스홀더(`"교육 워크북 제목"`)를 실제 워크북 제목으로 바꾼다.
 2. 원고를 아래 컴포넌트 마크업으로 작성해 `content.html`로 저장한다(`<link rel="stylesheet" href="style.css">`).
 3. `python3 build.py content.html 결과.pdf` 로 빌드한다.
 4. 검수: PyMuPDF(`fitz`)로 일부 페이지를 PNG로 렌더해 눈으로 확인한다(아래 검수 스니펫).
@@ -32,7 +32,7 @@ WeasyPrint 69+ 기준. 시스템에 libpango/libcairo/libharfbuzz 가 있어야 
 import fitz
 d = fitz.open("결과.pdf"); print("pages", d.page_count)
 for i in [0,1,4]:
-    d[i].get_pixmap(dpi=96).save(f"/tmp/page{i+1}.png")
+    d[i].get_pixmap(dpi=96).save(f"page{i+1}.png")   # 플랫폼 독립: 현재 작업 폴더에 저장
 ```
 
 ## 디자인 원칙(이 시스템의 "분석된 디자인")

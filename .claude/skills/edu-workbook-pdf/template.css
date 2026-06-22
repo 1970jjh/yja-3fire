@@ -45,7 +45,8 @@
   size: A4;
   margin: 20mm 17mm 18mm 17mm;
   @bottom-center {
-    content: "보고 스킬 실습 워크북";
+    /* 워크북마다 실제 제목으로 교체하세요 (재사용 템플릿 플레이스홀더) */
+    content: "교육 워크북 제목";
     font-family: 'Nanum'; font-size: 7.5pt; color: #9AA4B6;
     letter-spacing: 0.5px;
   }

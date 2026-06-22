@@ -8,7 +8,11 @@
   style.css(=template.css 복사본)와 assets/ 폴더를 두세요.
 """
 import sys, os
-from weasyprint import HTML
+try:
+    from weasyprint import HTML
+except ImportError:
+    print("Error: 'weasyprint' 가 설치되어 있지 않습니다. 'pip3 install weasyprint' 로 설치하세요.", file=sys.stderr)
+    sys.exit(1)
 
 def main():
     if len(sys.argv) < 2:
