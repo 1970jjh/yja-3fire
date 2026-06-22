@@ -1,0 +1,3 @@
+NanumGothic — SIL Open Font License, Version 1.1
+Copyright (c) Naver Corporation. https://hangeul.naver.com/font
+이 폰트는 OFL 1.1 하에 배포되며, 임베딩 및 재배포가 허용됩니다.
