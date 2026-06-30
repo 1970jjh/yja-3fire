@@ -740,6 +740,112 @@ text(s, Inches(0.8), ry+Inches(0.58), Inches(6), Inches(0.7),
 footer(s, "형식이 신뢰를 만든다", ORANGE)
 
 # ====================================================================
+# 19-1. 공문서 양식 한눈에 보기 (목업 이미지)
+# ====================================================================
+s = slide(); bg(s)
+header(s, "PART 2  기본 이론", "공문서 양식 한눈에 보기", ORANGE, ORANGE)
+text(s, M, Inches(1.62), PW-2*M, Inches(0.4),
+     [[("실제 공문서(시행문)는 이렇게 생겼어요. ", 11, INK, False),("①~⑧ 순서", 11, ORANGE, True),("로 구조를 익혀보세요.", 11, INK, False)]])
+PGB=RGBColor(0xB4,0xBC,0xC8); TL=RGBColor(0xD4,0xDA,0xE3)
+px, pw = Inches(1.75), Inches(4.0)
+py, ph = Inches(2.15), Inches(5.45)
+rect(s, px, py, pw, ph, WHITE, line=PGB, line_w=1.3, shadow=True)
+ix = px+Inches(0.28); iw=pw-Inches(0.56)
+def tline(y, frac, col=TL, h=Pt(3.2), x=None, w=None):
+    xx = ix if x is None else x
+    ww = iw if w is None else w
+    rect(s, xx, y, int(ww*frac), h, col)
+def badge(n, cy, accent=ORANGE):
+    d=Inches(0.32)
+    rect(s, px-Inches(0.47), cy, d, d, accent, shape=MSO_SHAPE.OVAL)
+    text(s, px-Inches(0.47), cy, d, d, [[(str(n), 10.5, WHITE, True)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+# ① 기관명
+text(s, px, py+Inches(0.18), pw, Inches(0.4), [[("한전원자력연료(주)", 15, NAVY, True)]], align=PP_ALIGN.CENTER)
+rect(s, ix, py+Inches(0.68), iw, Pt(2), NAVY); rect(s, ix, py+Inches(0.745), iw, Pt(1), NAVY)
+badge(1, py+Inches(0.18))
+# ② 수신
+text(s, ix, py+Inches(0.92), iw, Inches(0.3), [[("수신  ", 10.5, INK, True),("○○○○장  (○○과장)", 10.5, INK, False)]])
+badge(2, py+Inches(0.9))
+# ③ 제목
+text(s, ix, py+Inches(1.34), iw, Inches(0.3), [[("제목  ", 11, ORANGE, True),("신입직원 입문교육 결과 보고", 11, NAVY, True)]])
+badge(3, py+Inches(1.32))
+# ④ 본문
+by=py+Inches(1.82)
+text(s, ix, by, iw, Inches(0.28), [[("1. 관련: 인재개발팀-1234(2026. 7. 1.)", 9.2, INK, False)]])
+text(s, ix, by+Inches(0.34), iw, Inches(0.28), [[("2. 신입직원 입문교육 결과를 다음과 같이 보고합니다.", 9.2, INK, False)]])
+text(s, ix+Inches(0.2), by+Inches(0.7), iw, Inches(0.26), [[("가. 교육 개요: 일시·대상·내용", 8.8, GRAY, False)]])
+text(s, ix+Inches(0.2), by+Inches(1.0), iw, Inches(0.26), [[("나. 주요 결과 및 만족도", 8.8, GRAY, False)]])
+badge(4, by-Inches(0.02))
+# ⑤ 붙임
+text(s, ix, py+Inches(3.08), iw, Inches(0.3), [[("붙임  ", 10, ORANGE, True),("1. 교육 결과보고서 1부.   ", 9.5, INK, False),("끝.", 9.5, NAVY, True)]])
+badge(5, py+Inches(3.06))
+# ⑥ 발신명의
+text(s, px, py+Inches(3.55), pw, Inches(0.4), [[("한전원자력연료 사장", 13, NAVY, True),("   (직인)", 8.5, GRAY, False)]], align=PP_ALIGN.CENTER)
+badge(6, py+Inches(3.58))
+# ⑦ 결재란
+rect(s, ix, py+Inches(4.05), iw, Inches(0.46), LIGHT, line=TL, line_w=1, shape=MSO_SHAPE.ROUNDED_RECTANGLE, round_=0.08)
+text(s, ix, py+Inches(4.05), iw, Inches(0.46), [[("기안 ○○○   검토 ○○○   결재 ○○○", 9, GRAY, False)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+badge(7, py+Inches(4.13))
+# ⑧ 기관정보
+rect(s, ix, py+Inches(4.72), iw, Pt(1.2), PGB)
+text(s, px, py+Inches(4.82), pw, Inches(0.5),
+     [[("대전광역시 유성구 ○○로 000", 7.8, GRAY, False)],
+      [("☎ 042-000-0000   /   전송 042-000-0001   /   www.knfc.co.kr", 7.8, GRAY, False)]],
+     align=PP_ALIGN.CENTER, line_spacing=1.15)
+badge(8, py+Inches(4.9))
+# legend
+ly=Inches(7.85)
+leg=[("발신 기관명 (로고)","수신자 (받는 사람)","제목 (한 줄 요약)","본문 (1. 가. 항목 기호)"),
+     ("붙임 + “끝.” 표시","발신 명의·직인","결재란 (기안·검토·결재)","기관 주소·연락처")]
+for col in range(2):
+    for r in range(4):
+        n=col*4+r+1; yy=ly+Inches(0.43)*r; xx=M+Inches(3.35)*col
+        rect(s, xx, yy+Inches(0.02), Inches(0.3), Inches(0.3), ORANGE, shape=MSO_SHAPE.OVAL)
+        text(s, xx, yy+Inches(0.02), Inches(0.3), Inches(0.3), [[(str(n), 10, WHITE, True)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+        text(s, xx+Inches(0.42), yy, Inches(2.85), Inches(0.34), [[(leg[col][r], 10.5, INK, False)]], anchor=MSO_ANCHOR.MIDDLE)
+footer(s, "정해진 자리에, 정해진 내용을", ORANGE)
+
+# ====================================================================
+# 19-2. 공문서 3단 구조 + 표기법
+# ====================================================================
+s = slide(); bg(s)
+header(s, "PART 2  기본 이론", "공문서 3단 구조 — 두문·본문·결문", ORANGE, ORANGE)
+text(s, M, Inches(1.62), PW-2*M, Inches(0.4),
+     [[("공문서는 크게 세 덩어리. 위에서 아래로 ", 11, INK, False),("‘누가 → 무엇을 → 누가·언제’", 11, ORANGE, True),(" 순서예요.", 11, INK, False)]])
+def zone(y, h, accent, pale, kr, who, items):
+    rect(s, M, y, PW-2*M, h, pale, shape=MSO_SHAPE.ROUNDED_RECTANGLE, round_=0.04)
+    rect(s, M, y, Inches(1.25), h, accent, shape=MSO_SHAPE.ROUNDED_RECTANGLE, round_=0.07)
+    text(s, M, y+h/2-Inches(0.36), Inches(1.25), Inches(0.45), [[(kr, 18, WHITE, True)]], align=PP_ALIGN.CENTER)
+    text(s, M, y+h/2+Inches(0.06), Inches(1.25), Inches(0.3), [[(who, 9.5, RGBColor(0xFF,0xFF,0xFF), False)]], align=PP_ALIGN.CENTER)
+    tx=M+Inches(1.45)
+    for j,(k,v) in enumerate(items):
+        yy=y+Inches(0.18)+ (h-Inches(0.36))/len(items)*j
+        text(s, tx, yy, Inches(1.55), Inches(0.4), [[(k, 11, accent, True)]], anchor=MSO_ANCHOR.MIDDLE)
+        text(s, tx+Inches(1.55), yy, Inches(3.3), Inches(0.45), [[(v, 10, INK, False)]], anchor=MSO_ANCHOR.MIDDLE, line_spacing=1.05)
+zone(Inches(2.15), Inches(1.2), BLUE, PALE_BLUE, "두문", "누구에게",
+     [("기관명","발신 기관 (예: 한전원자력연료)"),("수신 · 경유","받는 사람 / 거쳐가는 부서")])
+zone(Inches(3.45), Inches(1.95), TEAL, PALE_TEAL, "본문", "무엇을",
+     [("제목","내용을 한 줄로 압축 (명사형)"),("내용","1. → 가. → 1) → 가) 항목 기호 순서"),("붙임","첨부물 표시 + 본문 끝 “끝.”")])
+zone(Inches(5.5), Inches(1.85), ORANGE, PALE_ORG, "결문", "누가·언제",
+     [("발신 명의","○○기관장 + 직인"),("결재·시행","기안·검토·결재 / 시행일·문서번호"),("기관 정보","주소·전화·전송·누리집")])
+# 표기법 치트시트
+cy=Inches(7.6)
+text(s, M, cy, PW-2*M, Inches(0.4), [[("✍️  자주 틀리는 표기법 — 이것만은!", 13, NAVY, True)]])
+cheats=[("날짜","2026. 7. 8.","숫자·마침표, 끝에도 마침표"),
+        ("금액","금113,560원","괄호에 한글 병기"),
+        ("시간","14:00","24시각제 · 쌍점(:)"),
+        ("끝 표시","본문 끝 “끝.”","붙임 있으면 붙임 뒤")]
+cw4=(PW-2*M-Inches(0.45))/4
+for i,(t1,ex,note) in enumerate(cheats):
+    xx=M+(cw4+Inches(0.15))*i
+    rect(s, xx, cy+Inches(0.42), cw4, Inches(1.5), WHITE, line=LINE, line_w=1, shape=MSO_SHAPE.ROUNDED_RECTANGLE, round_=0.07, shadow=True)
+    rect(s, xx, cy+Inches(0.42), cw4, Inches(0.42), PALE_ORG, shape=MSO_SHAPE.ROUND_2_SAME_RECTANGLE, round_=0.3)
+    text(s, xx, cy+Inches(0.42), cw4, Inches(0.42), [[(t1, 11, ORANGE, True)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    text(s, xx+Inches(0.08), cy+Inches(0.96), cw4-Inches(0.16), Inches(0.4), [[(ex, 11.5, NAVY, True)]], align=PP_ALIGN.CENTER, line_spacing=1.0)
+    text(s, xx+Inches(0.08), cy+Inches(1.42), cw4-Inches(0.16), Inches(0.45), [[(note, 8.5, GRAY, False)]], align=PP_ALIGN.CENTER, line_spacing=1.05)
+footer(s, "구조를 알면, 공문서가 쉬워진다", ORANGE)
+
+# ====================================================================
 # 20. 원페이지 보고서
 # ====================================================================
 s = slide(); bg(s)
