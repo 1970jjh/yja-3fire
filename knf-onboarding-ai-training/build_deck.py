@@ -756,21 +756,23 @@ footer(s, "손으로 쓰면, 머리에 남는다", ORANGE)
 # ====================================================================
 s = slide(); bg(s)
 header(s, "PART 2  ·  팀 실습", "보고서 미션카드 (택 1)", ORANGE, ORANGE, 23)
-text(s, M, Inches(1.7), PW-2*M, Inches(0.4), [[("조별로 미션 1개를 골라 ‘원페이지 보고서’로 설계하세요. (실제 업무 상황으로 바꿔도 OK)", 11, INK, False)]], line_spacing=1.1)
+text(s, M, Inches(1.7), PW-2*M, Inches(0.4), [[("조별로 미션 1개를 골라 ", 11, INK, False),("자유롭게 토론하며 ", 11, ORANGE, True),("‘원페이지 보고서’로 완성하세요. (실제 상황으로 바꿔도 OK)", 11, INK, False)]], line_spacing=1.1)
 cards=[("📋","MISSION A · 행사기획","신입사원 워크숍 개최 계획","목적·프로그램·예산·일정을 한 장으로 보고"),
        ("🛠️","MISSION B · 업무개선","반복 업무 자동화 제안","현황 문제 → AI 활용 개선안 → 기대효과 건의"),
        ("📊","MISSION C · 현황보고","교육 만족도 조사 결과","설문 결과 분석 → 시사점 → 개선 방안 제시"),
-       ("⚠️","MISSION D · 상황보고","업무 지연 상황 중간보고","원인·영향·대응방안을 두괄식으로 신속 보고")]
-gy=Inches(2.55); cw=(PW-2*M-Inches(0.2))/2; chh=Inches(2.75)
+       ("⚠️","MISSION D · 상황보고","업무 지연 상황 중간보고","원인·영향·대응방안을 두괄식으로 신속 보고"),
+       ("💡","MISSION E · 아이디어톤","있으면 좋겠다! 사내 문화·복지","팀 토론으로 베스트 아이디어 1개 → 제안서 한 장"),
+       ("📣","MISSION F · 홍보기획","MZ세대 겨냥 회사 SNS 홍보","회사 매력 발굴 → 콘텐츠 컨셉·기대효과 한 장")]
+gy=Inches(2.4); cw=(PW-2*M-Inches(0.2))/2; chh=Inches(2.3); pitch=Inches(2.45)
 for i,(ic,tag,t1,t2) in enumerate(cards):
     r=i//2; c=i%2
-    xx=M+(cw+Inches(0.2))*c; yy=gy+Inches(3.0)*r
+    xx=M+(cw+Inches(0.2))*c; yy=gy+pitch*r
     rect(s, xx, yy, cw, chh, WHITE, line=LINE, line_w=1, shape=MSO_SHAPE.ROUNDED_RECTANGLE, round_=0.05, shadow=True)
-    rect(s, xx, yy, cw, Inches(0.56), PALE_ORG, shape=MSO_SHAPE.ROUND_2_SAME_RECTANGLE, round_=0.35)
-    text(s, xx+Inches(0.22), yy+Inches(0.12), cw-Inches(0.44), Inches(0.34), [[(ic+"  "+tag, 11, ORANGE, True)]], anchor=MSO_ANCHOR.MIDDLE)
-    text(s, xx+Inches(0.22), yy+Inches(0.82), cw-Inches(0.44), Inches(0.7), [[(t1, 14, NAVY, True)]], line_spacing=1.05)
-    rect(s, xx+Inches(0.22), yy+Inches(1.62), cw-Inches(1.0), Inches(0.04), ORANGE)
-    text(s, xx+Inches(0.22), yy+Inches(1.8), cw-Inches(0.44), Inches(0.8), [[(t2, 10.5, GRAY, False)]], line_spacing=1.2)
+    rect(s, xx, yy, cw, Inches(0.5), PALE_ORG, shape=MSO_SHAPE.ROUND_2_SAME_RECTANGLE, round_=0.35)
+    text(s, xx+Inches(0.2), yy+Inches(0.09), cw-Inches(0.4), Inches(0.32), [[(ic+"  "+tag, 10.5, ORANGE, True)]], anchor=MSO_ANCHOR.MIDDLE)
+    text(s, xx+Inches(0.2), yy+Inches(0.66), cw-Inches(0.4), Inches(0.66), [[(t1, 13, NAVY, True)]], line_spacing=1.05)
+    rect(s, xx+Inches(0.2), yy+Inches(1.44), cw-Inches(1.0), Inches(0.035), ORANGE)
+    text(s, xx+Inches(0.2), yy+Inches(1.6), cw-Inches(0.4), Inches(0.66), [[(t2, 10, GRAY, False)]], line_spacing=1.15)
 footer(s, "어떤 일이든, 보고는 한 장이면 된다", ORANGE)
 
 # ====================================================================
