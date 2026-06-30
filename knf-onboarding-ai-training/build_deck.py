@@ -257,9 +257,8 @@ text(s, M, y+Inches(0.18), PW-2*M, Inches(0.4), [[("4가지 핵심 기능", 13.5
 feats = [("🖼️","이미지","아이디어 스케치·시각자료"),("🎬","영상·음악","홍보 스크립트·사내방송 기획"),
          ("📝","캔버스","기획서·보고서·번역 전용 공간"),("💬","대화·요약","자료 요약·아이디어 정리")]
 fy = y+Inches(0.6)
+cw = (PW-2*M-Inches(0.36))/4
 for i,(ic,t1,t2) in enumerate(feats):
-    xx = M+ (PW-2*M-Inches(0.3))/4*i + Inches(0.1)*0
-    cw = (PW-2*M-Inches(0.36))/4
     xx = M + (cw+Inches(0.12))*i
     rect(s, xx, fy, cw, Inches(1.5), WHITE, line=LINE, line_w=1, shape=MSO_SHAPE.ROUNDED_RECTANGLE, round_=0.07, shadow=True)
     text(s, xx, fy+Inches(0.18), cw, Inches(0.5), [[(ic, 22, INK, False)]], align=PP_ALIGN.CENTER)
@@ -445,7 +444,7 @@ for i,(no,t1,t2) in enumerate(cards):
     r=i//2; c=i%2
     xx=M+(cw+Inches(0.2))*c; yy=gy+(Inches(1.35))*r
     rect(s, xx, yy, cw, Inches(1.2), WHITE, line=LINE, line_w=1, shape=MSO_SHAPE.ROUNDED_RECTANGLE, round_=0.05, shadow=True)
-    text(s, xx+Inches(0.2), yy+Inches(0.16), Inches(0.9), Inches(0.4), [[(no, 18, PALE_TEAL if False else TEAL, True)]])
+    text(s, xx+Inches(0.2), yy+Inches(0.16), Inches(0.9), Inches(0.4), [[(no, 18, TEAL, True)]])
     rect(s, xx+Inches(0.2), yy+Inches(0.58), Inches(0.5), Inches(0.05), TEAL)
     text(s, xx+Inches(0.9), yy+Inches(0.14), cw-Inches(1.0), Inches(0.4), [[(t1, 13, NAVY, True)]], anchor=MSO_ANCHOR.MIDDLE)
     text(s, xx+Inches(0.22), yy+Inches(0.66), cw-Inches(0.4), Inches(0.5), [[(t2, 10, GRAY, False)]], line_spacing=1.1)
@@ -511,9 +510,10 @@ y=def_box(s, Inches(1.75), "한 줄 정의",
           "구글의 최신 AI로 맞춤형 챗봇·웹앱을 만드는 개발 플랫폼. 코딩 없이 ‘말로 설명’하면 완성돼요. (aistudio.google.com · 무료)", TEAL, PALE_TEAL, h=Inches(1.2))
 text(s, M, y+Inches(0.12), PW-2*M, Inches(0.4), [[("핵심 기능", 13, NAVY, True)]])
 fy=y+Inches(0.55)
+cw=(PW-2*M-Inches(0.36))/4
 for i,(t1,t2) in enumerate([("대용량 분석","수천 페이지 자료를 한 번에"),("멀티모달","이미지·영상·음성 동시 처리"),
                             ("챗봇 제작","우리 회사 전용 AI 챗봇"),("업무 연동","Drive·Sheets 자동화")]):
-    cw=(PW-2*M-Inches(0.36))/4; xx=M+(cw+Inches(0.12))*i
+    xx=M+(cw+Inches(0.12))*i
     rect(s, xx, fy, cw, Inches(1.15), WHITE, line=LINE, line_w=1, shape=MSO_SHAPE.ROUNDED_RECTANGLE, round_=0.07, shadow=True)
     text(s, xx+Inches(0.05), fy+Inches(0.18), cw-Inches(0.1), Inches(0.4), [[(t1, 11.5, TEAL, True)]], align=PP_ALIGN.CENTER)
     text(s, xx+Inches(0.08), fy+Inches(0.58), cw-Inches(0.16), Inches(0.5), [[(t2, 8.8, GRAY, False)]], align=PP_ALIGN.CENTER, line_spacing=1.05)
