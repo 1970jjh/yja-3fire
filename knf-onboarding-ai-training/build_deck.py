@@ -82,7 +82,10 @@ def text(s, x, y, w, h, paras, align=PP_ALIGN.LEFT, anchor=MSO_ANCHOR.TOP, space
 
 def bg(s, color=WHITE): rect(s, 0, 0, PW, PH, color)
 
-def header(s, tag, title, color, accent, page_no):
+def header(s, tag, title, color, accent, page_no=None):
+    # page number auto-computed from this slide's 1-indexed position,
+    # so inserting/reordering slides never requires manual renumbering.
+    page_no = len(prs.slides._sldIdLst)
     rect(s, 0, 0, PW, Inches(0.15), accent)
     text(s, M, Inches(0.4), PW-2*M-Inches(0.5), Inches(0.3), [[(tag, 11, color, True)]])
     text(s, M, Inches(0.68), PW-2*M-Inches(0.4), Inches(0.85), [[(title, 21.5, NAVY, True)]], line_spacing=0.98)
@@ -354,6 +357,32 @@ tip(s, yy+Inches(0.05), "캔버스로 만든 보고서는 PART 2(보고서 작�
 footer(s, "AI로 ‘빈 화면의 공포’를 없앤다", TEAL)
 
 # ====================================================================
+# 7-1. 제미나이로 웹앱 만들기
+# ====================================================================
+s = slide(); bg(s)
+header(s, "PART 1  제미나이  |  기능 ③  캔버스", "제미나이로 웹앱·게임 만들기", TEAL, TEAL)
+y=def_box(s, Inches(1.75), "코딩이 필요 없어요",
+          "제미나이에게 “○○ 앱 만들어줘”라고 하면 캔버스에서 실제 작동하는 웹앱을 만들어 줘요. 만든 앱은 링크로 바로 공유 — 모바일에서도 OK.", TEAL, PALE_TEAL, h=Inches(1.2))
+text(s, M, y+Inches(0.15), PW-2*M, Inches(0.4), [[("이런 앱을 만들 수 있어요 — 간단한 것부터 업무용까지", 13, NAVY, True)]])
+apps=[("🎮","점심 내기 게임","오늘 누가 쏠까? 룰렛·사다리 게임으로 결정"),
+      ("☕","커피 취합 앱","팀원 음료 주문을 한 번에 모아 자동 집계"),
+      ("🗳️","즉석 투표","회식 메뉴·날짜를 실시간 투표로 결정"),
+      ("✅","준비물 체크앱","출장·교육 준비물 체크리스트 공유"),
+      ("🧮","업무 계산기","출장비·근무시간·단위 환산 자동 계산"),
+      ("📊","미니 설문폼","행사 만족도·의견을 모아 결과 자동 집계")]
+gy=y+Inches(0.6); cw=(PW-2*M-Inches(0.2))/2; chh=Inches(1.55); pitch=Inches(1.68)
+for i,(ic,t1,t2) in enumerate(apps):
+    r=i//2; c=i%2
+    xx=M+(cw+Inches(0.2))*c; yy=gy+pitch*r
+    rect(s, xx, yy, cw, chh, WHITE, line=LINE, line_w=1, shape=MSO_SHAPE.ROUNDED_RECTANGLE, round_=0.06, shadow=True)
+    rect(s, xx+Inches(0.2), yy+Inches(0.32), Inches(0.62), Inches(0.62), PALE_TEAL, shape=MSO_SHAPE.OVAL)
+    text(s, xx+Inches(0.2), yy+Inches(0.3), Inches(0.62), Inches(0.62), [[(ic, 20, INK, False)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    text(s, xx+Inches(0.95), yy+Inches(0.26), cw-Inches(1.1), Inches(0.4), [[(t1, 12.5, TEAL, True)]])
+    text(s, xx+Inches(0.95), yy+Inches(0.66), cw-Inches(1.12), Inches(0.7), [[(t2, 9.5, GRAY, False)]], line_spacing=1.12)
+tip(s, gy+pitch*3+Inches(0.1), "만드는 법: ① 원하는 앱을 구체적으로 설명 → ② 미리보기에서 눌러보고 “○○ 바꿔줘”로 수정 → ③ 링크로 공유", TEAL, h=Inches(0.78))
+footer(s, "아이디어만 있으면, 앱이 된다", TEAL)
+
+# ====================================================================
 # 8. 프롬프트 6원칙
 # ====================================================================
 s = slide(); bg(s)
@@ -500,6 +529,49 @@ for tag,t1,ex in missions:
     yy+=Inches(1.4)
 ws_box(s, M, yy+Inches(0.05), PW-2*M, Inches(2.45), "✍️  노트북LM을 어떤 업무 자료에 써보고 싶나요?", TEAL, nlines=4)
 footer(s, "검색하지 말고, 내 자료에게 물어보라", TEAL)
+
+# ====================================================================
+# 13-1. 딥리서치 (제미나이 + 노트북LM)
+# ====================================================================
+s = slide(); bg(s)
+header(s, "PART 1  제미나이 · 노트북LM", "딥리서치 — 깊이 있는 자료조사", TEAL, TEAL)
+text(s, M, Inches(1.7), PW-2*M, Inches(0.55),
+     [[("‘밖의 정보’는 ", 12, INK, False),("제미나이 딥리서치", 12, TEAL, True),
+       ("로, ‘내 자료’는 ", 12, INK, False),("노트북LM", 12, BLUE, True),("으로 깊게 파헤칩니다.", 12, INK, False)]], line_spacing=1.15)
+cw=(PW-2*M-Inches(0.2))/2
+def dr_card(x, accent, pale, tag, what, hows):
+    rect(s, x, Inches(2.3), cw, Inches(3.95), WHITE, line=LINE, line_w=1, shape=MSO_SHAPE.ROUNDED_RECTANGLE, round_=0.035, shadow=True)
+    rect(s, x, Inches(2.3), cw, Inches(0.5), pale, shape=MSO_SHAPE.ROUND_2_SAME_RECTANGLE, round_=0.35)
+    text(s, x+Inches(0.2), Inches(2.31), cw-Inches(0.4), Inches(0.48), [[(tag, 11.5, accent, True)]], anchor=MSO_ANCHOR.MIDDLE)
+    text(s, x+Inches(0.2), Inches(2.9), cw-Inches(0.4), Inches(0.3), [[("무엇인가요?", 10, accent, True)]])
+    text(s, x+Inches(0.2), Inches(3.18), cw-Inches(0.4), Inches(1.1), [[(what, 9.8, INK, False)]], line_spacing=1.18)
+    text(s, x+Inches(0.2), Inches(4.34), cw-Inches(0.4), Inches(0.3), [[("이렇게 써요", 10, accent, True)]])
+    yy=Inches(4.66)
+    for j,hh in enumerate(hows):
+        rect(s, x+Inches(0.2), yy+Inches(0.03), Inches(0.26), Inches(0.26), accent, shape=MSO_SHAPE.OVAL)
+        text(s, x+Inches(0.2), yy+Inches(0.01), Inches(0.26), Inches(0.28), [[(str(j+1), 9, WHITE, True)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+        text(s, x+Inches(0.55), yy, cw-Inches(0.75), Inches(0.34), [[(hh, 9.3, INK, False)]], line_spacing=1.0, anchor=MSO_ANCHOR.MIDDLE)
+        yy+=Inches(0.38)
+dr_card(M, TEAL, PALE_TEAL, "🌐  제미나이 딥리서치 (외부·웹)",
+        "주제 하나를 주면 AI가 수십~수백 개 웹사이트를 스스로 조사·교차검증해, 출처가 달린 종합 보고서를 자동으로 작성해 줘요.",
+        ["제미나이에서 ‘Deep Research’ 선택","조사할 주제를 구체적으로 입력","AI가 짠 ‘조사 계획’ 확인·수정","몇 분 뒤, 출처 포함 보고서 완성"])
+dr_card(M+cw+Inches(0.2), BLUE, PALE_BLUE, "📁  노트북LM (내부·내 자료)",
+        "내가 올린 자료(규정·보고서·논문) 안에서만 교차분석·요약해 줘요. 답변마다 출처 페이지가 표시돼 신뢰도가 높아요.",
+        ["노트북LM에 자료(소스) 업로드","자연어로 깊이 있게 질문","‘노트북 가이드’로 요약·마인드맵","출처 번호로 원문 즉시 확인"])
+ey=Inches(6.45)
+rect(s, M, ey, PW-2*M, Inches(3.0), LIGHT, line=LINE, line_w=1, shape=MSO_SHAPE.ROUNDED_RECTANGLE, round_=0.03)
+text(s, Inches(0.8), ey+Inches(0.18), Inches(6), Inches(0.35), [[("💼  한전원자력연료 신입사원, 이렇게 활용하세요", 12.5, NAVY, True)]])
+text(s, Inches(0.8), ey+Inches(0.6), Inches(3.0), Inches(0.3), [[("제미나이 딥리서치 (밖을 본다)", 10.5, TEAL, True)]])
+for i,t1 in enumerate(["원자력·에너지 산업 최신 기술·정책 동향","해외 원전연료 시장·경쟁사 동향 조사","신규 과제 사전조사·배경자료 초안"]):
+    text(s, Inches(0.82), ey+Inches(0.92)+Inches(0.31)*i, Inches(3.05), Inches(0.32), [[("· ", 10, TEAL, True),(t1, 9.5, INK, False)]], line_spacing=1.0)
+text(s, Inches(3.95), ey+Inches(0.6), Inches(3.0), Inches(0.3), [[("노트북LM (안을 본다)", 10.5, BLUE, True)]])
+for i,t1 in enumerate(["사내 규정·매뉴얼·절차서 심층 분석","과거 보고서·회의록 모아 핵심 정리","교육·기술자료로 학습 가이드 제작"]):
+    text(s, Inches(3.97), ey+Inches(0.92)+Inches(0.31)*i, Inches(3.0), Inches(0.32), [[("· ", 10, BLUE, True),(t1, 9.5, INK, False)]], line_spacing=1.0)
+rect(s, Inches(0.8), ey+Inches(1.95), PW-2*M-Inches(0.6), Pt(1), LINE)
+text(s, Inches(0.8), ey+Inches(2.08), PW-2*M-Inches(0.6), Inches(0.65),
+     [[("🔒  결과는 ", 9.8, RED, True),("출처를 반드시 확인", 9.8, RED, True),
+       ("하고, 대외비·보안자료는 공개형 AI에 입력하지 않습니다.", 9.8, INK, False)]], anchor=MSO_ANCHOR.MIDDLE, line_spacing=1.1)
+footer(s, "넓게는 제미나이, 깊게는 노트북LM", TEAL)
 
 # ====================================================================
 # 14. AI 스튜디오
